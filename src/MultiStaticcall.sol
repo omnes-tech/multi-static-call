@@ -67,7 +67,7 @@ contract MultiStaticcall {
     /// -----------------------------------------------------------------------
 
     /**
-     * @notice This fallback function redirect to Multicall3 contract.
+     * @notice This fallback function points to {Multicall3} contract.
      */
     fallback() external payable {
         assembly {
