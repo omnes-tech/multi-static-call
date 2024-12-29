@@ -18,7 +18,7 @@ import {Script, console} from "forge-std/Script.sol";
 
 //  ==========  Internal imports    ==========
 
-import {MultiStaticcall} from "../src/MultiStaticcall.sol";
+import {MultiCall} from "../src/MultiCall.sol";
 
 /// -----------------------------------------------------------------------
 /// Script
@@ -32,15 +32,15 @@ contract Deploy is Script {
     bytes32 public salt = bytes32("salt");
     uint256 public key = vm.envUint("PRIVATE_KEY");
 
-    MultiStaticcall public multiStaticCall;
+    MultiCall public multiCall;
 
     function run() public {
         vm.startBroadcast(key);
 
-        multiStaticCall = new MultiStaticcall{salt: salt}();
+        multiCall = new MultiCall{salt: salt}();
 
         vm.stopBroadcast();
 
-        console.log("deployed address:", address(multiStaticCall));
+        console.log("deployed address:", address(multiCall));
     }
 }

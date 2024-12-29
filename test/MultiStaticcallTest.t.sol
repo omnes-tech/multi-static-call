@@ -18,7 +18,7 @@ import {Test, console} from "forge-std/Test.sol";
 
 //  ==========  Internal imports    ==========
 
-import {MultiStaticcall} from "../src/MultiStaticcall.sol";
+import {MultiCall} from "../src/MultiCall.sol";
 
 /// -----------------------------------------------------------------------
 /// Test
@@ -29,9 +29,9 @@ import {MultiStaticcall} from "../src/MultiStaticcall.sol";
  * @author Omnes Tech (Eduardo W. da Cunha - @EWCunha && Gustavo W. Deps - @G-Deps && Afonso Dalvi - @Afonsodalvi).
  */
 contract CounterTest is Test {
-    MultiStaticcall public multiStaticcall;
+    MultiCall public multiCall;
 
     function setUp() public {
-        multiStaticcall = new MultiStaticcall();
+        multiCall = new MultiCall();
     }
 }
