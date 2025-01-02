@@ -88,33 +88,39 @@ contract DeploylessMultiCall {
             Call[] memory simulationCalls,
             address[] memory addresses
         ) = MultiCallCodec.decode(callData);
-        if (type_ == CallType.STATIC_CALL) {
+        bytes memory resultsB;
+        if (type_ == CallType.SIMULATION) {
+            _simulateCalls(simulationCalls);
+        } else if (type_ == CallType.STATIC_CALL) {
             bytes[] memory results = _aggregateStatic(staticCalls);
-            assembly {
-                return(results, returndatasize())
-            }
+            resultsB = abi.encode(results);
         } else if (type_ == CallType.TRY_STATIC_CALL) {
             Result[] memory results = _tryAggregateStatic(
                 staticCalls,
                 requireSuccess
             );
-            assembly {
-                return(results, returndatasize())
-            }
+            resultsB = abi.encode(results);
         } else if (type_ == CallType.TRY_STATIC_CALL2) {
             Result[] memory results = _tryAggregateStatic(
                 staticCallsWithFailure
             );
-            assembly {
-                return(results, returndatasize())
-            }
+            resultsB = abi.encode(results);
         } else if (type_ == CallType.CODE_LENGTH) {
             uint256[] memory lengths = _getCodeLengths(addresses);
-            assembly {
-                return(lengths, returndatasize())
-            }
-        } else {
-            _simulateCalls(simulationCalls);
+            resultsB = abi.encode(lengths);
+        } else if (type_ == CallType.BALANCES) {
+            uint256[] memory lengths = _getBalances(addresses);
+            resultsB = abi.encode(lengths);
+        } else if (type_ == CallType.ADDRESSES_DATA) {
+            (
+                uint256[] memory balances,
+                uint256[] memory codeLengths
+            ) = _getAddressesData(addresses);
+            resultsB = abi.encode(balances, codeLengths);
+        }
+
+        assembly {
+            return(add(resultsB, 0x20), mload(resultsB))
         }
     }
 
@@ -242,6 +248,49 @@ contract DeploylessMultiCall {
         lengths = new uint256[](targets.length);
         for (uint256 i = targets.length; i > 0; ) {
             lengths[i - 1] = targets[i - 1].code.length;
+
+            unchecked {
+                --i;
+            }
+        }
+    }
+
+    /**
+     * @notice Gets the balance for each given address.
+     * @param targets: array of target addresses.
+     * @return balances - uint256[] - array of balances for each target address.
+     */
+    function _getBalances(
+        address[] memory targets
+    ) internal view returns (uint256[] memory balances) {
+        balances = new uint256[](targets.length);
+        for (uint256 i = targets.length; i > 0; ) {
+            balances[i - 1] = targets[i - 1].balance;
+
+            unchecked {
+                --i;
+            }
+        }
+    }
+
+    /**
+     * @notice Gets data from given addresses.
+     * @param targets: array of target addresses.
+     * @return balances - uint256[] - array of balances for each target address.
+     * @return codeLengths - uint256[] - array of length of codes for each target address.
+     */
+    function _getAddressesData(
+        address[] memory targets
+    )
+        internal
+        view
+        returns (uint256[] memory balances, uint256[] memory codeLengths)
+    {
+        balances = new uint256[](targets.length);
+        codeLengths = new uint256[](targets.length);
+        for (uint256 i = targets.length; i > 0; ) {
+            balances[i - 1] = targets[i - 1].balance;
+            codeLengths[i - 1] = targets[i - 1].code.length;
 
             unchecked {
                 --i;

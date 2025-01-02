@@ -367,4 +367,29 @@ contract MultiCall {
             }
         }
     }
+
+    /**
+     * @notice Gets data from given addresses.
+     * @param targets: array of target addresses.
+     * @return balances - uint256[] - array of balances for each target address.
+     * @return codeLengths - uint256[] - array of length of codes for each target address.
+     */
+    function getAddressesData(
+        address[] calldata targets
+    )
+        external
+        view
+        returns (uint256[] memory balances, uint256[] memory codeLengths)
+    {
+        balances = new uint256[](targets.length);
+        codeLengths = new uint256[](targets.length);
+        for (uint256 i = targets.length; i > 0; ) {
+            balances[i - 1] = targets[i - 1].balance;
+            codeLengths[i - 1] = targets[i - 1].code.length;
+
+            unchecked {
+                --i;
+            }
+        }
+    }
 }
