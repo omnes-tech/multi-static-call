@@ -70,4 +70,25 @@ contract DeploylessMultiCallTest is Test {
 
         console.logBytes(returnData);
     }
+
+    function test_ChainData() public {
+        bytes memory constructorArg = abi.encodePacked(CallType.CHAIN_DATA);
+
+        bytes memory creationCode = abi.encodePacked(
+            type(DeploylessMultiCall).creationCode,
+            abi.encode(constructorArg)
+        );
+
+        bytes memory returnData;
+        assembly {
+            let contractAddress := create(
+                0,
+                add(creationCode, 0x20),
+                mload(creationCode)
+            )
+            returndatacopy(add(returnData, 0x20), 0x00, returndatasize())
+        }
+
+        console.logBytes(returnData);
+    }
 }

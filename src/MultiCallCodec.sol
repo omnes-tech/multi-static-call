@@ -62,6 +62,7 @@ struct StaticCallWithFailure {
  * @param CODE_LENGTH: for `_getCodeLengths(address[])` function;
  * @param BALANCES: for `_getBalances(address[])` function;
  * @param ADDRESSES_DATA: for `_getAddressesData(address[])` function;
+ * @param CHAIN_DATA: for `_getChainData()` function;
  */
 enum CallType {
     SIMULATION,
@@ -70,7 +71,8 @@ enum CallType {
     TRY_STATIC_CALL2,
     CODE_LENGTH,
     BALANCES,
-    ADDRESSES_DATA
+    ADDRESSES_DATA,
+    CHAIN_DATA
 }
 
 /// -----------------------------------------------------------------------
@@ -112,11 +114,10 @@ library MultiCallCodec {
         )
     {
         uint8 typeUit8 = uint8(encoded[0]);
-        bytes memory encodedCall = BytesLib.slice(
-            encoded,
-            1,
-            encoded.length - 1
-        );
+        bytes memory encodedCall;
+        if (typeUit8 != uint8(CallType.CHAIN_DATA)) {
+            encodedCall = BytesLib.slice(encoded, 1, encoded.length - 1);
+        }
         if (typeUit8 == uint8(CallType.STATIC_CALL)) {
             staticCalls = abi.decode(encodedCall, (StaticCall[]));
         } else if (typeUit8 == uint8(CallType.TRY_STATIC_CALL)) {
@@ -137,7 +138,7 @@ library MultiCallCodec {
             typeUit8 == uint8(CallType.ADDRESSES_DATA)
         ) {
             addresses = abi.decode(encodedCall, (address[]));
-        } else {
+        } else if (typeUit8 != uint8(CallType.CHAIN_DATA)) {
             revert MultiCallCodec__InvalidStaticCallType(typeUit8);
         }
         type_ = CallType(typeUit8);

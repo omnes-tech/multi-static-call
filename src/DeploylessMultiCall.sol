@@ -117,6 +117,32 @@ contract DeploylessMultiCall {
                 uint256[] memory codeLengths
             ) = _getAddressesData(addresses);
             resultsB = abi.encode(balances, codeLengths);
+        } else if (type_ == CallType.CHAIN_DATA) {
+            (
+                uint256 chainId,
+                uint256 blockNumber,
+                bytes32 blockHash,
+                uint256 basefee,
+                address coinbase,
+                uint256 timestamp,
+                uint256 prevrandao,
+                uint256 gaslimit,
+                uint256 gasprice
+            ) = _getChainData();
+            bytes memory part1 = abi.encode(
+                chainId,
+                blockNumber,
+                blockHash,
+                basefee,
+                coinbase
+            );
+            bytes memory part2 = abi.encode(
+                timestamp,
+                prevrandao,
+                gaslimit,
+                gasprice
+            );
+            resultsB = abi.encodePacked(part1, part2);
         }
 
         assembly {
@@ -296,5 +322,45 @@ contract DeploylessMultiCall {
                 --i;
             }
         }
+    }
+
+    /**
+     * @notice Gets chain data.
+     * @return chainId - uint256 - chain id.
+     * @return blockNumber - uint256 - block number.
+     * @return blockHash - bytes32 - block hash.
+     * @return basefee - uint256 - base fee.
+     * @return coinbase - address - coinbase.
+     * @return timestamp - uint256 - timestamp.
+     * @return prevrandao - uint256 - prevrandao.
+     * @return gaslimit - uint256 - gas limit.
+     * @return gasprice - uint256 - gas price.
+     */
+    function _getChainData()
+        internal
+        view
+        returns (
+            uint256 chainId,
+            uint256 blockNumber,
+            bytes32 blockHash,
+            uint256 basefee,
+            address coinbase,
+            uint256 timestamp,
+            uint256 prevrandao,
+            uint256 gaslimit,
+            uint256 gasprice
+        )
+    {
+        return (
+            block.chainid,
+            block.number,
+            blockhash(block.number),
+            block.basefee,
+            block.coinbase,
+            block.timestamp,
+            block.prevrandao,
+            block.gaslimit,
+            tx.gasprice
+        );
     }
 }
