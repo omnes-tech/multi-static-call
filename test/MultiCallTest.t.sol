@@ -28,7 +28,7 @@ import {MultiCall} from "../src/MultiCall.sol";
  * @title Test file.
  * @author Omnes Tech (Eduardo W. da Cunha - @EWCunha && Gustavo W. Deps - @G-Deps && Afonso Dalvi - @Afonsodalvi).
  */
-contract CounterTest is Test {
+contract MultiCallTest is Test {
     MultiCall public multiCall;
 
     function setUp() public {
