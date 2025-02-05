@@ -29,7 +29,8 @@ import {MultiCall} from "../src/MultiCall.sol";
  * @author Omnes Tech (Eduardo W. da Cunha - @EWCunha && Gustavo W. Deps - @G-Deps && Afonso Dalvi - @Afonsodalvi).
  */
 contract Deploy is Script {
-    bytes32 public salt = bytes32("salt");
+    bytes32 public salt =
+        bytes32(keccak256(abi.encodePacked(vm.envString("SALT"))));
     uint256 public key = vm.envUint("PRIVATE_KEY");
 
     MultiCall public multiCall;
