@@ -35,9 +35,11 @@ contract Deploy is Script {
     MultiCall public multiCall;
 
     function run() public {
+        vm.createSelectFork(vm.prompt("network"));
+
         vm.startBroadcast(key);
 
-        multiCall = new MultiCall{salt: salt}();
+        multiCall = new MultiCall();
 
         vm.stopBroadcast();
 

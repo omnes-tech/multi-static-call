@@ -8,3 +8,7 @@ libs = ["lib"]
 [rpc_endpoints]
 ethereum = "${ETHEREUM_RPC_URL}"
 sepolia = "${SEPOLIA_RPC_URL}"
+base = "${BASE_RPC_URL}"
+
+[etherscan]
+base = { key = "${BASESCAN_API_KEY}", url = "${BASESCAN_API_URL}" }
