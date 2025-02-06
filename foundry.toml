@@ -7,8 +7,35 @@ libs = ["lib"]
 
 [rpc_endpoints]
 ethereum = "${ETHEREUM_RPC_URL}"
-sepolia = "${SEPOLIA_RPC_URL}"
+sepolia = "${SEPOLIA_RPC_URL}"   # missing funds
+holesky = "${HOLESKY_RPC_URL}"   # missing funds
+
 base = "${BASE_RPC_URL}"
+baseSepolia = "${BASE_SEPOLIA_RPC_URL}"
+
+arbitrum = "${ARBITRUM_RPC_URL}"
+arbitrumSepolia = "${ARBITRUM_SEPOLIA_RPC_URL}"
+
+polygon = "${POLYGON_RPC_URL}"
+amoy = "${AMOY_RPC_URL}"       # missing funds
+
+bsc = "${BSC_RPC_URL}"
+bscTestnet = "${BSC_TESTNET_RPC_URL}"
+
 
 [etherscan]
-base = { key = "${BASESCAN_API_KEY}", url = "${BASESCAN_API_URL}" }
+base = { url = "https://api.basescan.org/api", key = "${BASESCAN_API_KEY}" }
+baseSepolia = { url = "https://api-sepolia.basescan.org/api", key = "${BASESCAN_API_KEY}" }
+
+ethereum = { url = "https://api.etherscan.io/api", key = "${ETHERSCAN_API_KEY}" }
+sepolia = { url = "https://api-sepolia.etherscan.io/api", key = "${ETHERSCAN_API_KEY}" } # missing funds
+holesky = { url = "https://api-holesky.etherscan.io/api", key = "${ETHERSCAN_API_KEY}" } # missing funds
+
+arbitrum = { url = "https://api.arbiscan.io/api", key = "${ARBITRUM_API_KEY}" }
+arbitrumSepolia = { url = "https://api-sepolia.arbiscan.io/api", key = "${ARBITRUM_API_KEY}" }
+
+polygon = { url = "https://api.polygonscan.com/api", key = "${POLYGONSCAN_API_KEY}" }
+amoy = { url = "https://api-amoy.polygonscan.com/api", key = "${POLYGONSCAN_API_KEY}" } # missing funds
+
+bsc = { url = "https://api.bscscan.com/api", key = "${BSCSCAN_API_KEY}" }
+bscTestnet = { url = "https://api-testnet.bscscan.com/api", key = "${BSCSCAN_API_KEY}" }
